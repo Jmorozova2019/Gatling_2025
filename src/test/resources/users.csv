@@ -1,0 +1,8 @@
+login,password,firstName,lastName,street,city,creditCard,expData
+userJM1,pass_JM_1,user_JM_1_first_name,user_JM_1_last_name,Street 1,City 1\, world,1111,1/10/2030
+userJM2,pass_JM_2,user_JM_2_first_name,user_JM_2_last_name,Street 2,City 2\, world,2222,2/10/2030
+userJM3,pass_JM_3,user_JM_3_first_name,user_JM_3_last_name,Street 3,City 3\, world,3333,3/10/2030
+userJM4,pass_JM_4,user_JM_4_first_name,user_JM_4_last_name,Street 4,City 4\, world,4444,4/10/2030
+userJM5,pass_JM_5,user_JM_5_first_name,user_JM_5_last_name,Street 5,City 5\, world,5555,5/10/2030
+userJM6,pass_JM_6,user_JM_6_first_name,user_JM_6_last_name,Street 6,City 6\, world,6666,6/10/2030
+
