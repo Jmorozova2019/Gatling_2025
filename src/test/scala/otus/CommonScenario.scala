@@ -23,5 +23,9 @@ class  CommonScenario{
     .exec(Actions.reservations)
     .exec(Actions.selectFlight)
     .exec(Actions.payment)
+    .exec { session =>
+      println(session("RESPONSE_BODY").as[String])
+      session
+    }
     .exec(Actions.invoice)
 }

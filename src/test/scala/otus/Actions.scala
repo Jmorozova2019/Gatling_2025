@@ -41,15 +41,19 @@ object Actions {
       ("JSFormSubmit", "off"),
       ("password", "#{password}"),
       ))
-    .check(status is 200)
+    .check(
+      status is 200
+      //,css("input[name~='userSession']", "value").exists
+    )
+    //.exitHereIfFailed
 
   val reservations = http("UC_05_Reservations")
     .get("/cgi-bin/reservations.pl?page=welcome")
     //Выбрать случайные города отправления и прибытия и сохранить
     .check(
       status.is(200),
-      css("select[name~=\"depart\"]>option", "value").findRandom.saveAs("departCities"),
-      css("select[name~=\"arrive\"]>option", "value").findRandom.saveAs("arriveCities"),
+      css("select[name=\"depart\"]>option", "value").findRandom.saveAs("departCities"),
+      css("select[name=\"arrive\"]>option", "value").findRandom.saveAs("arriveCities"),
       css("input[name=\"departDate\"]", "value").findRandom.saveAs("departDate"),
       css("input[name=\"returnDate\"]", "value").findRandom.saveAs("returnDate"),
       css("input[name=\"seatType\"]", "value").findRandom.saveAs("seatType"),
@@ -75,7 +79,7 @@ object Actions {
     ))
     .check(
       status is 200,
-      css("input[name~=\"outboundFlight\"]", "value").findRandom.saveAs("outboundFlight")
+      css("input[name=\"outboundFlight\"]", "value").findRandom.saveAs("outboundFlight")
     )
 
   val payment: HttpRequestBuilder = http("UC_07_Payment")
@@ -85,7 +89,7 @@ object Actions {
       ("lastName", "#{lastName}"),
       ("address1", "#{street}"),
       ("address2", "#{city}"),
-      ("pass1", "#{login} #{password}"),
+      ("pass1", "#{firstName} #{lastName}"),
       ("creditCard", "#{creditCard}"),
       ("expDate", "#{expData}"),
       ("numPassengers", "1"),
@@ -100,7 +104,7 @@ object Actions {
     ))
     .check(
       status is 200,
-      css("input[name~=\"outboundFlight\"]", "value").findRandom.saveAs("outboundFlight")
+      bodyString.saveAs("RESPONSE_BODY")
     )
 
   val invoice: HttpRequestBuilder = http("UC_08_Invoice")
@@ -113,20 +117,4 @@ object Actions {
       status is 200,
       css("title").is("Flight Selections")
     )
-
-  /* -
-    css("select[name~=\"depart\"]>option", "value").saveAs("departCitiesArr"),
-    css("select[name~=\"arrive\"]>option", "value").findRandom.saveAs("arriveCities")
-    https://stackoverflow.com/questions/32250233/how-to-use-saved-variable-values-outside-of-gatling-scenario-in-scala-file
-    val countDepartCities = departCitiesArr.length
-    val departCityIdx = min + Random.nextInt(max)
-    val departCity = departCitiesArr[cityIdx]
-
-    val countArriveCities = arriveCitiesArr.length
-    val arriveCitiesArrFix = arriveCitiesArr.filter(_ != departCity)
-
-    val countArriveCities = arriveCitiesArrFix.length
-    val arriveCityIdx = min + Random.nextInt(max)
-    val arriveCity = arriveCitiesArrFix[arriveCityIdx]
-*/
 }
