@@ -1,31 +1,45 @@
 package otus
 
 import io.gatling.core.Predef._
-import io.gatling.http.Predef._
 import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
-import io.gatling.http.protocol.HttpProtocolBuilder
-import io.gatling.http.request.builder.HttpRequestBuilder
 import Feeders.usersFeeder
 
 
-//шаг 3- создать сценарий с запросами (запросы можно повторять) и выполнить apply()
 object CommonScenario {
   def apply() = new CommonScenario().scn
 }
 
 class  CommonScenario{
+  val user = Feeders.usersFeeder
+
+  val enter: ChainBuilder = group("enter")(
+    feed(user)
+      .exec(Actions.mainPage)
+      .exec(Actions.welcome)
+      .exec(Actions.nav)
+      .exec(Actions.login)
+  )
+
+  val selectFlight: ChainBuilder = group("selectFlight")(
+    feed(user)
+      .exec(Actions.reservations)
+      .exec(Actions.selectFlight)
+  )
+
+  val payment: ChainBuilder = group("payment")(
+    feed(user)
+      .exec(Actions.payment)
+  )
+
+  val toStartPage: ChainBuilder = group("toStartPage")(
+    feed(user)
+      .exec(Actions.invoice)
+  )
+
   val scn: ScenarioBuilder = scenario("Debug")
-    .feed(usersFeeder)
-    .exec(Actions.mainPage)
-    .exec(Actions.welcome)
-    .exec(Actions.nav)
-    .exec(Actions.login)
-    .exec(Actions.reservations)
-    .exec(Actions.selectFlight)
-    .exec(Actions.payment)
-    .exec { session =>
-      println(session("RESPONSE_BODY").as[String])
-      session
-    }
-    .exec(Actions.invoice)
+    .feed(user)
+      .exec(enter)
+      .exec(selectFlight)
+      .exec(payment)
+      .exec(toStartPage)
 }

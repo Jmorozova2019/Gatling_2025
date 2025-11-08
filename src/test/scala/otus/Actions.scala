@@ -16,7 +16,7 @@ object Actions {
   )
 
   val mainPage: HttpRequestBuilder = http("UC_01_GetMainPage")
-    .get("/webtours")//mainPage - вызываем по имени переменной    UC_01_GetMainPage - в логах
+    .get("/webtours")
     .headers(sentHeadersMainPage)
     .check(status.is(200))
 
@@ -45,15 +45,14 @@ object Actions {
       status is 200
       //,css("input[name~='userSession']", "value").exists
     )
-    //.exitHereIfFailed
 
   val reservations = http("UC_05_Reservations")
     .get("/cgi-bin/reservations.pl?page=welcome")
     //Выбрать случайные города отправления и прибытия и сохранить
     .check(
       status.is(200),
-      css("select[name=\"depart\"]>option", "value").findRandom.saveAs("departCities"),
-      css("select[name=\"arrive\"]>option", "value").findRandom.saveAs("arriveCities"),
+      css("select[name=\"depart\"]>option", "value").findRandom.saveAs("departCity"),
+      css("select[name=\"arrive\"]>option", "value").findRandom.saveAs("arriveCity"),
       css("input[name=\"departDate\"]", "value").findRandom.saveAs("departDate"),
       css("input[name=\"returnDate\"]", "value").findRandom.saveAs("returnDate"),
       css("input[name=\"seatType\"]", "value").findRandom.saveAs("seatType"),
@@ -64,9 +63,9 @@ object Actions {
     .post("/cgi-bin/reservations.pl")
     .formParamSeq(Seq(
       ("advanceDiscount", "0"),
-      ("depart", "#{departCities}"),
+      ("depart", "#{departCity}"),
       ("departDate", "#{departDate}"),
-      ("arrive", "#{arriveCities}"),
+      ("arrive", "#{arriveCity}"),
       ("returnDate", "#{returnDate}"),
       ("numPassengers", "1"),
       ("seatPref", "#{seatPref}"),
